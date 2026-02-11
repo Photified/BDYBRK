@@ -44,7 +44,7 @@
         /* --- HEADER --- */
         header {
             background: var(--neon-yellow);
-            padding: 15px;
+            padding: 10px 15px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -63,17 +63,38 @@
             transform: skew(-5deg);
         }
 
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
         /* FIXED: High Contrast Score */
         .score-pill {
             background: var(--black);
             color: var(--neon-yellow);
-            padding: 8px 12px;
+            padding: 6px 10px;
             font-weight: bold;
             font-size: 0.75rem;
             border: 2px solid var(--white);
-            box-shadow: 4px 4px 0 var(--neon-pink);
+            box-shadow: 3px 3px 0 var(--neon-pink);
             transform: rotate(-2deg);
             text-transform: uppercase;
+        }
+
+        .cog-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 5px;
+            transition: transform 0.3s;
+        }
+        .cog-btn:active { transform: rotate(90deg); }
+        .cog-icon {
+            width: 28px;
+            height: 28px;
+            fill: var(--black);
+            filter: drop-shadow(2px 2px 0 var(--white));
         }
 
         /* --- NAVIGATION --- */
@@ -142,6 +163,7 @@
             position: relative;
             box-shadow: 8px 8px 0 rgba(0,0,0,0.5);
             cursor: pointer;
+            transition: transform 0.1s;
         }
         .task-card:active { transform: scale(0.98); background: var(--neon-yellow); }
 
@@ -156,6 +178,64 @@
             padding: 4px 8px;
             transform: skew(-10deg);
         }
+
+        /* --- SETTINGS & SOUNDS --- */
+        .settings-group {
+            width: 100%;
+            max-width: 400px;
+            margin-bottom: 20px;
+            background: rgba(0,0,0,0.2);
+            padding: 15px;
+            border: 2px solid var(--black);
+        }
+        .settings-label {
+            font-family: 'Rubik Mono One';
+            color: var(--white);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            text-shadow: 2px 2px 0 var(--black);
+        }
+        
+        .sound-option {
+            display: flex;
+            align-items: center;
+            background: var(--white);
+            border: 3px solid var(--black);
+            margin-bottom: 8px;
+            padding: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 4px 4px 0 rgba(0,0,0,0.3);
+        }
+        .sound-option.selected {
+            background: var(--neon-yellow);
+            box-shadow: 4px 4px 0 var(--neon-pink);
+            transform: translateX(-2px);
+        }
+        .sound-radio {
+            width: 20px; height: 20px;
+            border: 2px solid var(--black);
+            border-radius: 50%;
+            margin-right: 10px;
+            display: flex; justify-content: center; align-items: center;
+        }
+        .sound-option.selected .sound-radio::after {
+            content: ''; width: 10px; height: 10px;
+            background: var(--black); border-radius: 50%;
+        }
+
+        .btn-reset {
+            background: red; 
+            color: white; 
+            border: 4px solid black; 
+            padding: 15px; 
+            font-family: 'Rubik Mono One'; 
+            width: 100%; 
+            max-width: 400px;
+            cursor: pointer;
+            box-shadow: 6px 6px 0 var(--black);
+        }
+        .btn-reset:active { transform: translate(2px,2px); box-shadow: 2px 2px 0 var(--black); }
 
         /* --- PROFILE STATS --- */
         .stat-box {
@@ -198,7 +278,7 @@
         }
         .del-btn { color: red; background: none; border: none; font-size: 1.2rem; font-weight: bold; padding: 0 10px; }
 
-        /* --- CUSTOM MODAL (REPLACES NATIVE ALERTS) --- */
+        /* --- CUSTOM MODAL --- */
         #modal-overlay {
             display: none;
             position: fixed;
@@ -226,7 +306,6 @@
 
         .modal-title { font-family: 'Rubik Mono One'; margin-top: 0; text-transform: uppercase; }
         
-        /* Modal Input for adding items */
         .modal-field {
             width: 100%;
             padding: 10px;
@@ -251,7 +330,9 @@
             text-transform: uppercase;
         }
         .btn-primary { background: var(--black); color: var(--neon-cyan); }
-        .btn-primary:active { transform: translateY(2px); }
+        .btn-cancel { background: var(--white); color: red; }
+        
+        .btn-modal:active { transform: translateY(2px); }
 
         /* --- FINISH BUTTON --- */
         #complete-btn {
@@ -273,8 +354,15 @@
 
     <header>
         <h1>BDYBRK</h1>
-        <div class="score-pill">
-            RK: <span id="header-rank">NOVICE</span> | PTS: <span id="header-score">0</span>
+        <div class="header-right">
+            <div class="score-pill">
+                PTS: <span id="header-score">0</span>
+            </div>
+            <button class="cog-btn" onclick="openSettings()">
+                <svg class="cog-icon" viewBox="0 0 24 24">
+                    <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/>
+                </svg>
+            </button>
         </div>
     </header>
 
@@ -291,19 +379,16 @@
             <div class="task-card" onclick="openInfo('workout')">
                 <div class="tag" style="color: var(--neon-cyan)">MOVE</div>
                 <div id="txt-workout" style="font-size: 1.2rem; font-weight: bold; margin-top: 5px;"></div>
-                <div style="font-size: 0.7rem; color: #666; margin-top: 5px;">(Tap for info)</div>
             </div>
 
             <div class="task-card" onclick="openInfo('stretch')">
                 <div class="tag" style="color: var(--neon-pink)">STRETCH</div>
                 <div id="txt-stretch" style="font-size: 1.2rem; font-weight: bold; margin-top: 5px;"></div>
-                <div style="font-size: 0.7rem; color: #666; margin-top: 5px;">(Tap for info)</div>
             </div>
 
             <div class="task-card" onclick="openInfo('breathe')">
                 <div class="tag" style="color: var(--neon-yellow)">VIBE</div>
                 <div id="txt-breathe" style="font-size: 1.2rem; font-weight: bold; margin-top: 5px;"></div>
-                <div style="font-size: 0.7rem; color: #666; margin-top: 5px;">(Tap for info)</div>
             </div>
 
             <button id="complete-btn" onclick="finishSession()">COMPLETE!</button>
@@ -332,8 +417,19 @@
             <div class="stat-big" id="profile-sessions">0</div>
             <div class="stat-label">Breaks Taken</div>
         </div>
+    </div>
 
-        <button onclick="resetData()" style="background: red; color: white; border: 4px solid black; padding: 10px; font-family: 'Space Mono'; margin-top: 20px;">RESET ALL DATA</button>
+    <div id="settings-view" class="view">
+        <h2 style="font-family:'Rubik Mono One'; color: white; text-shadow: 2px 2px black;">SETTINGS</h2>
+        
+        <div class="settings-group">
+            <div class="settings-label">Win Sound</div>
+            <div id="sound-list">
+                </div>
+        </div>
+
+        <button onclick="confirmReset()" class="btn-reset">RESET ALL DATA</button>
+        <button onclick="switchView('home')" style="margin-top: 20px; background:transparent; color:white; border:none; text-decoration: underline;">Back to Game</button>
     </div>
 
     <div id="modal-overlay">
@@ -345,13 +441,93 @@
             <textarea id="modal-input-desc" class="modal-field" rows="3" placeholder="Description (Optional)..."></textarea>
             
             <div class="modal-btns">
-                <button class="btn-modal" onclick="closeModal()">Close</button>
-                <button class="btn-modal btn-primary" id="modal-ok-btn" style="display:none;">OK</button>
+                <button class="btn-modal btn-cancel" id="modal-cancel-btn" onclick="closeModal()">Close</button>
+                <button class="btn-modal btn-primary" id="modal-ok-btn">OK</button>
             </div>
         </div>
     </div>
 
     <script>
+        // --- SOUND ENGINE (Retro Synth) ---
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        const audioCtx = new AudioContext();
+        
+        const sounds = {
+            1: { name: "Classic Win", play: () => playArpeggio([523.25, 659.25, 783.99, 1046.50]) },
+            2: { name: "Coin Collect", play: () => playBeep(987.77, 1318.51) },
+            3: { name: "Power Up", play: () => playSlide(200, 800) },
+            4: { name: "Zelda Vibe", play: () => playArpeggio([783.99, 739.99, 698.46, 659.25, 1000]) },
+            5: { name: "Retro Drum", play: () => playNoise() }
+        };
+
+        function playArpeggio(notes) {
+            resumeAudio();
+            const now = audioCtx.currentTime;
+            notes.forEach((freq, i) => {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'square';
+                osc.frequency.value = freq;
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(now + (i * 0.1));
+                gain.gain.setValueAtTime(0.1, now + (i * 0.1));
+                gain.gain.exponentialRampToValueAtTime(0.01, now + (i * 0.1) + 0.1);
+                osc.stop(now + (i * 0.1) + 0.1);
+            });
+        }
+
+        function playBeep(f1, f2) {
+            resumeAudio();
+            const now = audioCtx.currentTime;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'square';
+            osc.frequency.setValueAtTime(f1, now);
+            osc.frequency.setValueAtTime(f2, now + 0.1);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start(now);
+            gain.gain.setValueAtTime(0.1, now);
+            osc.stop(now + 0.3);
+        }
+
+        function playSlide(f1, f2) {
+            resumeAudio();
+            const now = audioCtx.currentTime;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(f1, now);
+            osc.frequency.exponentialRampToValueAtTime(f2, now + 0.4);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start(now);
+            gain.gain.setValueAtTime(0.1, now);
+            gain.gain.linearRampToValueAtTime(0, now + 0.4);
+            osc.stop(now + 0.4);
+        }
+
+        function playNoise() {
+            resumeAudio();
+            // Simple low freq wave to simulate kick
+            const now = audioCtx.currentTime;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.frequency.setValueAtTime(150, now);
+            osc.frequency.exponentialRampToValueAtTime(0.01, now + 0.5);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start(now);
+            gain.gain.setValueAtTime(0.3, now);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.5);
+            osc.stop(now + 0.5);
+        }
+
+        function resumeAudio() {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+        }
+
         // --- DATA ---
         const defaultData = {
             workout: [
@@ -374,6 +550,7 @@
         // Load State
         let data = JSON.parse(localStorage.getItem('bdybrk-data-v3')) || defaultData;
         let stats = JSON.parse(localStorage.getItem('bdybrk-stats')) || { score: 0, sessions: 0, rank: "NOVICE" };
+        let settings = JSON.parse(localStorage.getItem('bdybrk-settings')) || { soundId: 1 };
         let currentSession = {};
         
         // Modal State
@@ -382,18 +559,47 @@
         // Init
         updateUI();
         renderLists();
+        renderSettings();
 
         // --- NAVIGATION ---
         function switchView(name) {
             document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            // Reset Nav
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            
             document.getElementById(name + '-view').classList.add('active');
             
-            // Highlight nav button
-            const idx = name === 'home' ? 0 : (name === 'lists' ? 1 : 2);
-            document.querySelectorAll('.nav-btn')[idx].classList.add('active');
+            // Highlight nav button if valid
+            if (name !== 'settings') {
+                const idx = name === 'home' ? 0 : (name === 'lists' ? 1 : 2);
+                document.querySelectorAll('.nav-btn')[idx].classList.add('active');
+            }
             
             if(name === 'profile') updateUI();
+        }
+
+        function openSettings() {
+            switchView('settings');
+        }
+
+        function renderSettings() {
+            const list = document.getElementById('sound-list');
+            list.innerHTML = '';
+            
+            Object.keys(sounds).forEach(key => {
+                const s = sounds[key];
+                const row = document.createElement('div');
+                row.className = `sound-option ${settings.soundId == key ? 'selected' : ''}`;
+                row.innerHTML = `<div class="sound-radio"></div> ${s.name}`;
+                
+                row.onclick = () => {
+                    settings.soundId = key;
+                    localStorage.setItem('bdybrk-settings', JSON.stringify(settings));
+                    s.play(); // Preview sound
+                    renderSettings();
+                };
+                list.appendChild(row);
+            });
         }
 
         // --- GAMEPLAY ---
@@ -413,9 +619,14 @@
             document.getElementById('results-area').style.display = 'block';
             document.getElementById('complete-btn').style.display = 'block';
             document.getElementById('go-btn').innerText = "REROLL";
+            
+            resumeAudio(); // Ensure audio is ready
         });
 
         function finishSession() {
+            // Play Sound
+            if(sounds[settings.soundId]) sounds[settings.soundId].play();
+
             stats.score += 100;
             stats.sessions += 1;
             updateRank();
@@ -436,7 +647,6 @@
 
         function updateUI() {
             document.getElementById('header-score').innerText = stats.score;
-            document.getElementById('header-rank').innerText = stats.rank;
             document.getElementById('profile-score').innerText = stats.score;
             document.getElementById('profile-rank').innerText = stats.rank;
             document.getElementById('profile-sessions').innerText = stats.sessions;
@@ -447,29 +657,37 @@
         const mTitle = document.getElementById('modal-title');
         const mDesc = document.getElementById('modal-desc');
         const mInput = document.getElementById('modal-input');
-        const mDescInput = document.getElementById('modal-input-desc'); // New Description Input
+        const mDescInput = document.getElementById('modal-input-desc'); 
         const mOkBtn = document.getElementById('modal-ok-btn');
+        const mCancelBtn = document.getElementById('modal-cancel-btn');
 
-        // UPDATED: Now supports 'add-item' type which shows both inputs
         function showModal(type, title, desc, callback) {
             mTitle.innerText = title;
             mDesc.innerText = desc || "";
             mDesc.style.display = desc ? 'block' : 'none';
             
-            // Reset inputs
             mInput.value = '';
             mDescInput.value = '';
 
+            mInput.style.display = 'none';
+            mDescInput.style.display = 'none';
+            mOkBtn.style.display = 'block';
+            mCancelBtn.innerText = "Close";
+            mOkBtn.innerText = "OK";
+            mOkBtn.className = "btn-modal btn-primary"; // Reset class
+
             if (type === 'add-item') {
                 mInput.style.display = 'block';
-                mDescInput.style.display = 'block'; // Show description box
-                mOkBtn.style.display = 'block';
+                mDescInput.style.display = 'block';
                 activeModalCallback = callback;
                 mInput.focus();
+            } else if (type === 'confirm') {
+                mCancelBtn.innerText = "NO";
+                mOkBtn.innerText = "YES";
+                mOkBtn.className = "btn-modal btn-reset"; // Red button for danger
+                activeModalCallback = callback;
             } else {
-                // Info mode or other modes
-                mInput.style.display = 'none';
-                mDescInput.style.display = 'none';
+                // Info mode
                 mOkBtn.style.display = 'none';
                 activeModalCallback = null;
             }
@@ -482,9 +700,12 @@
         }
 
         mOkBtn.addEventListener('click', () => {
-            // UPDATED: Passes both Title and Description to the callback
-            if (activeModalCallback && mInput.value.trim()) {
-                activeModalCallback(mInput.value.trim(), mDescInput.value.trim());
+            if (activeModalCallback) {
+                if(mInput.style.display === 'block') {
+                     if(mInput.value.trim()) activeModalCallback(mInput.value.trim(), mDescInput.value.trim());
+                } else {
+                    activeModalCallback();
+                }
                 closeModal();
             }
         });
@@ -501,21 +722,17 @@
             container.innerHTML = '';
             
             ['workout', 'stretch', 'breathe'].forEach(cat => {
-                // Group Container
                 const group = document.createElement('div');
                 group.className = 'list-group';
                 
-                // Header
                 const header = document.createElement('div');
                 header.className = 'list-header';
                 let color = cat === 'workout' ? 'var(--neon-cyan)' : (cat === 'stretch' ? 'var(--neon-pink)' : 'var(--neon-yellow)');
                 header.style.borderLeft = `10px solid ${color}`;
                 header.innerHTML = `<span>${cat.toUpperCase()}</span> <span>+ ADD</span>`;
                 
-                // UPDATED: Now sends the "add-item" type to showModal
                 header.onclick = () => {
                     showModal("add-item", `ADD TO ${cat.toUpperCase()}`, "", (val, desc) => {
-                        // Use the user provided description, or a fallback if empty
                         const finalDesc = desc || "Custom user task.";
                         data[cat].push({t: val, d: finalDesc});
                         saveData();
@@ -524,7 +741,6 @@
                 
                 group.appendChild(header);
 
-                // Items
                 data[cat].forEach((item, idx) => {
                     const row = document.createElement('div');
                     row.className = 'list-item';
@@ -555,15 +771,15 @@
             localStorage.setItem('bdybrk-stats', JSON.stringify(stats));
         }
 
-        function resetData() {
-            if(confirm("Reset all scores and lists?")) {
+        function confirmReset() {
+            showModal('confirm', 'DANGER ZONE', 'Are you sure you want to delete all points and custom lists?', () => {
                 localStorage.removeItem('bdybrk-data-v3');
                 localStorage.removeItem('bdybrk-stats');
+                localStorage.removeItem('bdybrk-settings');
                 location.reload();
-            }
+            });
         }
 
-        // Service Worker
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('sw.js');
         }
