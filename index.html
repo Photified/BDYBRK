@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>BDYBRK</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#000000">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    
+    <style>
+        :root {
+            --bg: #000000;
+            --card: #111111;
+            --text: #ffffff;
+            --accent: #333333;
+            --highlight: #ffffff;
+            --danger: #ff4444;
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* HEADER */
+        header {
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #222;
+        }
+        h1 { margin: 0; letter-spacing: 4px; font-size: 1.2rem; font-weight: 900; }
+        
+        button.icon-btn {
+            background: none;
+            border: none;
+            color: #666;
+            cursor: pointer;
+            padding: 10px;
+            font-size: 1.2rem;
+        }
+
+        /* VIEWS */
+        .view {
+            flex: 1;
+            display: none; /* Hidden by default */
+            flex-direction: column;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        .view.active { display: flex; }
+
+        /* HOME VIEW */
+        #home-view {
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        #go-btn {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: var(--card);
+            border: 2px solid #333;
+            color: white;
+            font-size: 2rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: transform 0.1s, background 0.2s;
+            margin-bottom: 40px;
+        }
+        #go-btn:active { transform: scale(0.95); background: #222; }
+
+        .result-card {
+            width: 100%;
+            max-width: 400px;
+            background: var(--card);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: left;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.3s, transform 0.3s;
+        }
+        .result-card.show { opacity: 1; transform: translateY(0); }
+
+        .result-item { margin-bottom: 15px; border-bottom: 1px solid #222; padding-bottom: 15px; }
+        .result-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        .label { font-size: 0.7rem; color: #666; letter-spacing: 2px; text-transform: uppercase; display: block; margin-bottom: 5px; }
+        .value { font-size: 1.2rem; font-weight: 500; }
+
+        /* SETTINGS VIEW */
+        .tabs { display: flex; gap: 10px; margin-bottom: 20px; }
+        .tab {
+            flex: 1;
+            background: var(--card);
+            border: 1px solid #222;
+            color: #666;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: center;
+            text-transform: uppercase;
+        }
+        .tab.active { background: #fff; color: #000; border-color: #fff; }
+
+        .input-group { display: flex; gap: 10px; margin-bottom: 20px; }
+        input {
+            flex: 1;
+            background: var(--card);
+            border: 1px solid #333;
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        input:focus { outline: none; border-color: #666; }
+        
+        .add-btn {
+            background: #333;
+            color: white;
+            border: none;
+            padding: 0 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        ul { list-style: none; padding: 0; margin: 0; }
+        li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: var(--card);
+            margin-bottom: 8px;
+            border-radius: 8px;
+            animation: fadeIn 0.2s ease;
+        }
+        .delete-btn { color: #444; background: none; border: none; font-size: 1.2rem; cursor: pointer; }
+        .delete-btn:hover { color: var(--danger); }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>BDYBRK</h1>
+        <button id="nav-btn" class="icon-btn">☰</button>
+    </header>
+
+    <div id="home-view" class="view active">
+        <button id="go-btn">START</button>
+        
+        <div id="result-container" class="result-card">
+            <div class="result-item">
+                <span class="label">Move</span>
+                <span class="value" id="res-workout"></span>
+            </div>
+            <div class="result-item">
+                <span class="label">Stretch</span>
+                <span class="value" id="res-stretch"></span>
+            </div>
+            <div class="result-item">
+                <span class="label">Breathe</span>
+                <span class="value" id="res-breathe"></span>
+            </div>
+        </div>
+    </div>
+
+    <div id="settings-view" class="view">
+        <div class="tabs">
+            <div class="tab active" data-cat="workout">Move</div>
+            <div class="tab" data-cat="stretch">Stretch</div>
+            <div class="tab" data-cat="breathe">Breathe</div>
+        </div>
+
+        <div class="input-group">
+            <input type="text" id="new-item" placeholder="Add item...">
+            <button class="add-btn" id="add-btn">+</button>
+        </div>
+
+        <ul id="list-container"></ul>
+    </div>
+
+    <script>
+        // --- DATA ---
+        const defaultData = {
+            workout: ["10 Jumping Jacks", "10 Squats", "5 Burpees", "20 High Knees"],
+            stretch: ["Touch Toes (30s)", "Neck Rolls", "Shoulder Shrugs", "Wrist Stretch"],
+            breathe: ["Box Breathing", "Drink 1 cup water", "Close eyes (1 min)", "4-7-8 Breathing"]
+        };
+
+        let data = JSON.parse(localStorage.getItem('bdybrk-data')) || defaultData;
+        let activeCategory = 'workout';
+
+        // --- ELEMENTS ---
+        const views = { home: document.getElementById('home-view'), settings: document.getElementById('settings-view') };
+        const navBtn = document.getElementById('nav-btn');
+        const goBtn = document.getElementById('go-btn');
+        const resultCard = document.getElementById('result-container');
+        const tabs = document.querySelectorAll('.tab');
+        const listContainer = document.getElementById('list-container');
+        const input = document.getElementById('new-item');
+        const addBtn = document.getElementById('add-btn');
+
+        // --- NAVIGATION ---
+        navBtn.addEventListener('click', () => {
+            const isHome = views.home.classList.contains('active');
+            views.home.classList.toggle('active');
+            views.settings.classList.toggle('active');
+            navBtn.textContent = isHome ? '✕' : '☰';
+            if (!isHome) renderList(); // Refresh list when entering settings
+        });
+
+        // --- LOGIC: RANDOMIZER ---
+        goBtn.addEventListener('click', () => {
+            const getRandom = (arr) => arr.length ? arr[Math.floor(Math.random() * arr.length)] : "Rest";
+            
+            document.getElementById('res-workout').textContent = getRandom(data.workout);
+            document.getElementById('res-stretch').textContent = getRandom(data.stretch);
+            document.getElementById('res-breathe').textContent = getRandom(data.breathe);
+            
+            resultCard.classList.remove('show');
+            void resultCard.offsetWidth; // Trigger reflow to restart animation
+            resultCard.classList.add('show');
+        });
+
+        // --- LOGIC: LIST MANAGEMENT ---
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelector('.tab.active').classList.remove('active');
+                tab.classList.add('active');
+                activeCategory = tab.dataset.cat;
+                renderList();
+            });
+        });
+
+        function renderList() {
+            listContainer.innerHTML = '';
+            data[activeCategory].forEach((item, index) => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <span>${item}</span>
+                    <button class="delete-btn" onclick="removeItem(${index})">×</button>
+                `;
+                listContainer.appendChild(li);
+            });
+        }
+
+        function saveData() {
+            localStorage.setItem('bdybrk-data', JSON.stringify(data));
+            renderList();
+        }
+
+        window.removeItem = (index) => {
+            data[activeCategory].splice(index, 1);
+            saveData();
+        };
+
+        const addItem = () => {
+            const val = input.value.trim();
+            if (val) {
+                data[activeCategory].push(val);
+                input.value = '';
+                saveData();
+            }
+        };
+
+        addBtn.addEventListener('click', addItem);
+        input.addEventListener('keypress', (e) => { if(e.key === 'Enter') addItem(); });
+
+        // Service Worker Registration
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js');
+        }
+    </script>
+</body>
+</html>
