@@ -224,6 +224,7 @@
             background: var(--black); border-radius: 50%;
         }
 
+        /* --- SETTINGS BUTTONS --- */
         .btn-reset {
             background: red; 
             color: white; 
@@ -236,6 +237,22 @@
             box-shadow: 6px 6px 0 var(--black);
         }
         .btn-reset:active { transform: translate(2px,2px); box-shadow: 2px 2px 0 var(--black); }
+
+        .btn-install {
+            background: var(--neon-cyan);
+            color: var(--black);
+            border: 4px solid var(--black);
+            padding: 15px;
+            font-family: 'Rubik Mono One';
+            width: 100%;
+            max-width: 400px;
+            margin-bottom: 20px;
+            cursor: pointer;
+            box-shadow: 6px 6px 0 var(--black);
+            display: none; /* Hidden by default */
+        }
+        .btn-install:active { transform: translate(2px,2px); box-shadow: 2px 2px 0 var(--black); }
+
 
         /* --- PROFILE STATS --- */
         .stat-box {
@@ -428,6 +445,8 @@
                 </div>
         </div>
 
+        <button id="btn-install" class="btn-install" onclick="installApp()">INSTALL APP</button>
+
         <button onclick="confirmReset()" class="btn-reset">RESET ALL DATA</button>
         <button onclick="switchView('home')" style="margin-top: 20px; background:transparent; color:white; border:none; text-decoration: underline;">Back to Game</button>
     </div>
@@ -510,7 +529,6 @@
 
         function playNoise() {
             resumeAudio();
-            // Simple low freq wave to simulate kick
             const now = audioCtx.currentTime;
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
@@ -527,6 +545,41 @@
         function resumeAudio() {
             if (audioCtx.state === 'suspended') audioCtx.resume();
         }
+
+        // --- PWA INSTALLATION ---
+        let deferredPrompt;
+        const installBtn = document.getElementById('btn-install');
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            // Prevent Chrome 67 and earlier from automatically showing the prompt
+            e.preventDefault();
+            // Stash the event so it can be triggered later.
+            deferredPrompt = e;
+            // Update UI to notify the user they can add to home screen
+            installBtn.style.display = 'block';
+        });
+
+        async function installApp() {
+            if (!deferredPrompt) return;
+            // Show the prompt
+            deferredPrompt.prompt();
+            // Wait for the user to respond to the prompt
+            const { outcome } = await deferredPrompt.userChoice;
+            console.log(`User response to the install prompt: ${outcome}`);
+            // We've used the prompt, and can't use it again, throw it away
+            deferredPrompt = null;
+            // Hide button if they accepted
+            if (outcome === 'accepted') {
+                installBtn.style.display = 'none';
+            }
+        }
+
+        window.addEventListener('appinstalled', () => {
+             // Clear the deferredPrompt so it can be garbage collected
+             deferredPrompt = null;
+             // Hide the install button
+             installBtn.style.display = 'none';
+        });
 
         // --- DATA ---
         const defaultData = {
