@@ -107,7 +107,7 @@
             display: none;
             flex-direction: column;
             padding: 20px;
-            overflow-y: auto; /* FIXED: Scrolling enabled here */
+            overflow-y: auto; 
             overflow-x: hidden;
             align-items: center;
             padding-bottom: 80px; /* Space for scroll */
@@ -227,14 +227,15 @@
         .modal-title { font-family: 'Rubik Mono One'; margin-top: 0; text-transform: uppercase; }
         
         /* Modal Input for adding items */
-        #modal-input {
+        .modal-field {
             width: 100%;
             padding: 10px;
             font-family: 'Space Mono';
             font-size: 1rem;
             border: 3px solid var(--black);
-            margin: 15px 0;
-            display: none; /* Hidden by default */
+            margin: 10px 0;
+            display: none;
+            background: white;
         }
 
         .modal-btns { display: flex; gap: 10px; justify-content: center; margin-top: 15px; }
@@ -340,7 +341,8 @@
             <h2 id="modal-title" class="modal-title">TITLE</h2>
             <p id="modal-desc">Description</p>
             
-            <input type="text" id="modal-input" placeholder="Type here..." autocomplete="off">
+            <input type="text" id="modal-input" class="modal-field" placeholder="Task Title..." autocomplete="off">
+            <textarea id="modal-input-desc" class="modal-field" rows="3" placeholder="Description (Optional)..."></textarea>
             
             <div class="modal-btns">
                 <button class="btn-modal" onclick="closeModal()">Close</button>
@@ -445,21 +447,29 @@
         const mTitle = document.getElementById('modal-title');
         const mDesc = document.getElementById('modal-desc');
         const mInput = document.getElementById('modal-input');
+        const mDescInput = document.getElementById('modal-input-desc'); // New Description Input
         const mOkBtn = document.getElementById('modal-ok-btn');
 
+        // UPDATED: Now supports 'add-item' type which shows both inputs
         function showModal(type, title, desc, callback) {
             mTitle.innerText = title;
             mDesc.innerText = desc || "";
             mDesc.style.display = desc ? 'block' : 'none';
             
-            if (type === 'input') {
+            // Reset inputs
+            mInput.value = '';
+            mDescInput.value = '';
+
+            if (type === 'add-item') {
                 mInput.style.display = 'block';
-                mInput.value = '';
+                mDescInput.style.display = 'block'; // Show description box
                 mOkBtn.style.display = 'block';
                 activeModalCallback = callback;
                 mInput.focus();
             } else {
+                // Info mode or other modes
                 mInput.style.display = 'none';
+                mDescInput.style.display = 'none';
                 mOkBtn.style.display = 'none';
                 activeModalCallback = null;
             }
@@ -472,8 +482,9 @@
         }
 
         mOkBtn.addEventListener('click', () => {
+            // UPDATED: Passes both Title and Description to the callback
             if (activeModalCallback && mInput.value.trim()) {
-                activeModalCallback(mInput.value.trim());
+                activeModalCallback(mInput.value.trim(), mDescInput.value.trim());
                 closeModal();
             }
         });
@@ -500,9 +511,13 @@
                 let color = cat === 'workout' ? 'var(--neon-cyan)' : (cat === 'stretch' ? 'var(--neon-pink)' : 'var(--neon-yellow)');
                 header.style.borderLeft = `10px solid ${color}`;
                 header.innerHTML = `<span>${cat.toUpperCase()}</span> <span>+ ADD</span>`;
+                
+                // UPDATED: Now sends the "add-item" type to showModal
                 header.onclick = () => {
-                    showModal("input", `ADD TO ${cat.toUpperCase()}`, "", (val) => {
-                        data[cat].push({t: val, d: "You added this custom move!"});
+                    showModal("add-item", `ADD TO ${cat.toUpperCase()}`, "", (val, desc) => {
+                        // Use the user provided description, or a fallback if empty
+                        const finalDesc = desc || "Custom user task.";
+                        data[cat].push({t: val, d: finalDesc});
                         saveData();
                     });
                 };
