@@ -5,19 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>BDYBRK</title>
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#9b00e8">
+    <meta name="theme-color" content="#4a148c">
     <link rel="apple-touch-icon" href="icon-192.png">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Roboto+Mono:wght@500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rubik+Mono+One&family=Space+Mono:ital,wght@0,400;0,700;1,700&display=swap" rel="stylesheet">
 
     <style>
         :root {
-            --hot-pink: #ff0099;
-            --electric-blue: #00ffff;
-            --neon-yellow: #ffff00;
-            --deep-purple: #6a00ff;
+            --purple: #6200ea;
+            --dark-purple: #310075;
+            --neon-pink: #ff00cc;
+            --neon-yellow: #fff200;
+            --neon-cyan: #00f7ff;
             --black: #000000;
             --white: #ffffff;
         }
@@ -26,220 +27,244 @@
 
         body {
             margin: 0;
-            background-color: var(--deep-purple);
-            /* 90s Pattern Generation */
+            background-color: var(--purple);
+            /* THE MTV TIGER STRIPE VIBE */
             background-image: 
-                radial-gradient(circle at 100% 100%, rgba(255, 0, 153, 0.8) 10%, transparent 11%),
-                radial-gradient(circle at 0% 0%, rgba(0, 255, 255, 0.8) 10%, transparent 11%),
-                linear-gradient(135deg, #6a00ff 25%, #5800d4 25%, #5800d4 50%, #6a00ff 50%, #6a00ff 75%, #5800d4 75%, #5800d4 100%);
-            background-size: 40px 40px;
+                radial-gradient(circle at 10% 20%, var(--neon-pink) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, var(--neon-cyan) 0%, transparent 20%),
+                repeating-linear-gradient(45deg, rgba(0,0,0,0.1) 0px, rgba(0,0,0,0.1) 20px, transparent 20px, transparent 40px);
             color: var(--black);
-            font-family: 'Roboto Mono', monospace;
+            font-family: 'Space Mono', monospace;
             display: flex;
             flex-direction: column;
             height: 100vh;
             overflow: hidden;
         }
 
-        /* --- HEADER & SCOREBOARD --- */
+        /* --- HEADER --- */
         header {
-            background: var(--black);
-            color: var(--neon-yellow);
+            background: var(--neon-yellow);
             padding: 15px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 4px solid var(--electric-blue);
-            box-shadow: 0 4px 0 rgba(0,0,0,0.5);
-            z-index: 10;
+            border-bottom: 5px solid var(--black);
+            box-shadow: 0 5px 0 rgba(0,0,0,0.3);
+            z-index: 20;
+            flex-shrink: 0;
         }
 
         h1 {
-            font-family: 'Archivo Black', sans-serif;
-            font-size: 1.8rem;
+            font-family: 'Rubik Mono One', sans-serif;
+            font-size: 1.4rem;
             margin: 0;
-            text-transform: uppercase;
-            text-shadow: 3px 3px 0px var(--hot-pink);
-            letter-spacing: -1px;
+            color: var(--purple);
+            text-shadow: 2px 2px 0 var(--white);
             transform: skew(-5deg);
         }
 
-        .score-badge {
-            background: var(--white);
-            padding: 5px 10px;
+        /* FIXED: High Contrast Score */
+        .score-pill {
+            background: var(--black);
+            color: var(--neon-yellow);
+            padding: 8px 12px;
             font-weight: bold;
-            border: 2px solid var(--hot-pink);
-            box-shadow: 3px 3px 0 var(--black);
-            font-size: 0.8rem;
+            font-size: 0.75rem;
+            border: 2px solid var(--white);
+            box-shadow: 4px 4px 0 var(--neon-pink);
+            transform: rotate(-2deg);
+            text-transform: uppercase;
         }
 
         /* --- NAVIGATION --- */
         .nav-bar {
-            background: var(--white);
             display: flex;
-            border-bottom: 4px solid var(--black);
+            background: var(--black);
+            flex-shrink: 0;
         }
         .nav-btn {
             flex: 1;
-            padding: 15px;
-            background: none;
+            padding: 15px 5px;
+            background: var(--black);
+            color: #888;
             border: none;
-            border-right: 2px solid var(--black);
-            font-family: 'Archivo Black', sans-serif;
+            font-family: 'Rubik Mono One', sans-serif;
+            font-size: 0.7rem;
             text-transform: uppercase;
             cursor: pointer;
-            font-size: 0.9rem;
-            transition: all 0.2s;
+            transition: 0.2s;
+            border-bottom: 4px solid var(--black);
         }
-        .nav-btn:last-child { border-right: none; }
         .nav-btn.active {
-            background: var(--neon-yellow);
-            box-shadow: inset 0 -4px 0 var(--hot-pink);
+            color: var(--white);
+            border-bottom: 4px solid var(--neon-pink);
+            background: #222;
         }
 
-        /* --- MAIN VIEW AREA --- */
+        /* --- VIEWS --- */
         .view {
             flex: 1;
             display: none;
             flex-direction: column;
             padding: 20px;
-            overflow-y: auto;
+            overflow-y: auto; /* FIXED: Scrolling enabled here */
+            overflow-x: hidden;
             align-items: center;
+            padding-bottom: 80px; /* Space for scroll */
         }
         .view.active { display: flex; }
 
-        /* --- HOME (PLAY) VIEW --- */
+        /* --- HOME BUTTON --- */
         #go-btn {
             width: 200px;
             height: 200px;
-            background: var(--neon-yellow);
+            background: var(--neon-cyan);
             border: 6px solid var(--black);
+            font-family: 'Rubik Mono One', sans-serif;
+            font-size: 2.2rem;
             color: var(--black);
-            font-family: 'Archivo Black', sans-serif;
-            font-size: 2.5rem;
-            cursor: pointer;
             margin: 30px 0;
-            box-shadow: 10px 10px 0 var(--hot-pink);
-            transform: rotate(-3deg);
-            transition: transform 0.2s, box-shadow 0.2s;
-            clip-path: polygon(10% 0, 100% 0, 100% 90%, 90% 100%, 0 100%, 0 10%); /* Retro Shape */
+            box-shadow: 10px 10px 0 var(--black);
+            cursor: pointer;
+            transition: transform 0.1s;
+            clip-path: polygon(10% 0, 100% 0, 100% 90%, 90% 100%, 0 100%, 0 10%);
         }
-        #go-btn:active {
-            transform: rotate(-3deg) translate(4px, 4px);
-            box-shadow: 2px 2px 0 var(--hot-pink);
-        }
+        #go-btn:active { transform: translate(4px, 4px); box-shadow: 6px 6px 0 var(--black); }
 
-        .card {
+        /* --- CARDS --- */
+        .task-card {
             width: 100%;
             max-width: 400px;
             background: var(--white);
             border: 4px solid var(--black);
-            box-shadow: 8px 8px 0 var(--electric-blue);
-            padding: 20px;
-            margin-bottom: 20px;
-            position: relative;
-        }
-
-        .task-row {
+            padding: 15px;
             margin-bottom: 15px;
-            padding: 10px;
-            background: #f0f0f0;
-            border: 2px solid var(--black);
+            position: relative;
+            box-shadow: 8px 8px 0 rgba(0,0,0,0.5);
             cursor: pointer;
-            transition: transform 0.1s;
         }
-        .task-row:active { transform: scale(0.98); background: var(--electric-blue); }
-        
-        .label {
-            display: inline-block;
+        .task-card:active { transform: scale(0.98); background: var(--neon-yellow); }
+
+        .tag {
+            position: absolute;
+            top: -12px;
+            left: 10px;
             background: var(--black);
             color: var(--white);
-            padding: 2px 6px;
-            font-size: 0.7rem;
+            font-size: 0.6rem;
             font-weight: bold;
-            text-transform: uppercase;
-            margin-bottom: 4px;
+            padding: 4px 8px;
             transform: skew(-10deg);
         }
-        .task-text { font-size: 1.1rem; font-weight: bold; display: block; }
-        .help-hint { font-size: 0.7rem; color: #666; margin-top: 4px; }
 
-        #complete-btn {
-            display: none; /* Hidden until tasks generated */
+        /* --- PROFILE STATS --- */
+        .stat-box {
             width: 100%;
-            padding: 15px;
-            background: var(--hot-pink);
-            color: white;
-            font-family: 'Archivo Black';
-            font-size: 1.2rem;
-            border: 4px solid var(--black);
-            box-shadow: 6px 6px 0 var(--black);
-            text-transform: uppercase;
-            cursor: pointer;
+            max-width: 350px;
+            background: var(--black);
+            color: var(--neon-yellow);
+            border: 4px solid var(--white);
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+            box-shadow: 10px 10px 0 var(--neon-pink);
         }
+        .stat-big { font-size: 3rem; font-family: 'Rubik Mono One'; line-height: 1; margin-bottom: 10px; }
+        .stat-label { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px; }
 
-        /* --- EDITOR VIEW --- */
-        .category-header {
-            width: 100%;
+        /* --- LIST EDITOR --- */
+        .list-group { width: 100%; max-width: 400px; margin-bottom: 30px; }
+        .list-header {
             background: var(--black);
             color: var(--white);
             padding: 10px;
-            margin-top: 20px;
-            font-family: 'Archivo Black';
-            text-transform: uppercase;
+            font-family: 'Rubik Mono One';
+            font-size: 0.9rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border: 2px solid var(--white);
             cursor: pointer;
+            border: 2px solid var(--white);
         }
-        .category-header:hover { background: var(--electric-blue); color: var(--black); }
-        
+        .list-header:hover { color: var(--neon-yellow); }
         .list-item {
-            background: var(--white);
+            background: rgba(255,255,255,0.9);
+            padding: 12px;
             border: 2px solid var(--black);
             border-top: none;
-            padding: 10px;
             display: flex;
             justify-content: space-between;
+            font-weight: bold;
         }
-        .del-btn { color: red; font-weight: bold; border: none; background: none; font-size: 1.2rem; }
+        .del-btn { color: red; background: none; border: none; font-size: 1.2rem; font-weight: bold; padding: 0 10px; }
 
-        /* --- POPUP MODAL --- */
-        .modal-overlay {
+        /* --- CUSTOM MODAL (REPLACES NATIVE ALERTS) --- */
+        #modal-overlay {
             display: none;
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.8);
+            background: rgba(49, 0, 117, 0.9);
             z-index: 100;
             justify-content: center;
             align-items: center;
             padding: 20px;
-        }
-        .modal {
-            background: var(--neon-yellow);
-            border: 5px solid var(--black);
-            box-shadow: 15px 15px 0 var(--hot-pink);
-            padding: 25px;
-            max-width: 400px;
-            width: 100%;
-            text-align: center;
-            position: relative;
-        }
-        .modal h2 { font-family: 'Archivo Black'; margin-top: 0; text-transform: uppercase; }
-        .close-modal {
-            background: var(--black);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            font-weight: bold;
-            margin-top: 20px;
-            cursor: pointer;
+            backdrop-filter: blur(4px);
         }
 
-        /* --- CONFETTI ANIMATION --- */
-        @keyframes pop { 0% { transform: scale(0); } 80% { transform: scale(1.1); } 100% { transform: scale(1); } }
-        .pop-in { animation: pop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        .modal-box {
+            background: var(--neon-yellow);
+            border: 5px solid var(--black);
+            box-shadow: 15px 15px 0 var(--neon-pink);
+            padding: 25px;
+            width: 100%;
+            max-width: 350px;
+            text-align: center;
+            animation: bounceIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes bounceIn { from{transform: scale(0.5); opacity:0;} to{transform: scale(1); opacity:1;} }
+
+        .modal-title { font-family: 'Rubik Mono One'; margin-top: 0; text-transform: uppercase; }
+        
+        /* Modal Input for adding items */
+        #modal-input {
+            width: 100%;
+            padding: 10px;
+            font-family: 'Space Mono';
+            font-size: 1rem;
+            border: 3px solid var(--black);
+            margin: 15px 0;
+            display: none; /* Hidden by default */
+        }
+
+        .modal-btns { display: flex; gap: 10px; justify-content: center; margin-top: 15px; }
+        
+        .btn-modal {
+            flex: 1;
+            padding: 12px;
+            border: 3px solid var(--black);
+            background: var(--white);
+            font-weight: bold;
+            font-family: 'Rubik Mono One';
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+        .btn-primary { background: var(--black); color: var(--neon-cyan); }
+        .btn-primary:active { transform: translateY(2px); }
+
+        /* --- FINISH BUTTON --- */
+        #complete-btn {
+            display: none;
+            width: 100%;
+            padding: 20px;
+            background: var(--neon-pink);
+            color: var(--white);
+            font-family: 'Rubik Mono One';
+            font-size: 1.2rem;
+            border: 4px solid var(--black);
+            box-shadow: 8px 8px 0 var(--white);
+            margin-top: 20px;
+        }
 
     </style>
 </head>
@@ -247,100 +272,131 @@
 
     <header>
         <h1>BDYBRK</h1>
-        <div class="score-badge">
-            SCORE: <span id="score-display">0</span> | <span id="medal-display">NOVICE</span>
+        <div class="score-pill">
+            RK: <span id="header-rank">NOVICE</span> | PTS: <span id="header-score">0</span>
         </div>
     </header>
 
     <div class="nav-bar">
-        <button class="nav-btn active" onclick="switchView('home')">The Zone</button>
-        <button class="nav-btn" onclick="switchView('lists')">Edit Moves</button>
+        <button class="nav-btn active" onclick="switchView('home')">Play</button>
+        <button class="nav-btn" onclick="switchView('lists')">Edit</button>
+        <button class="nav-btn" onclick="switchView('profile')">Profile</button>
     </div>
 
     <div id="home-view" class="view active">
-        <button id="go-btn">HIT IT!</button>
+        <button id="go-btn">START</button>
 
-        <div id="result-card" class="card" style="display: none;">
-            <div class="task-row" onclick="showExplainer('workout')">
-                <span class="label" style="background: var(--hot-pink)">Move</span>
-                <span class="task-text" id="txt-workout">...</span>
-                <div class="help-hint">(Click for instructions)</div>
-            </div>
-            
-            <div class="task-row" onclick="showExplainer('stretch')">
-                <span class="label" style="background: var(--deep-purple)">Stretch</span>
-                <span class="task-text" id="txt-stretch">...</span>
-                <div class="help-hint">(Click for instructions)</div>
+        <div id="results-area" style="width: 100%; max-width: 400px; display: none;">
+            <div class="task-card" onclick="openInfo('workout')">
+                <div class="tag" style="color: var(--neon-cyan)">MOVE</div>
+                <div id="txt-workout" style="font-size: 1.2rem; font-weight: bold; margin-top: 5px;"></div>
+                <div style="font-size: 0.7rem; color: #666; margin-top: 5px;">(Tap for info)</div>
             </div>
 
-            <div class="task-row" onclick="showExplainer('breathe')">
-                <span class="label" style="background: var(--electric-blue); color:black">Vibe</span>
-                <span class="task-text" id="txt-breathe">...</span>
-                <div class="help-hint">(Click for instructions)</div>
+            <div class="task-card" onclick="openInfo('stretch')">
+                <div class="tag" style="color: var(--neon-pink)">STRETCH</div>
+                <div id="txt-stretch" style="font-size: 1.2rem; font-weight: bold; margin-top: 5px;"></div>
+                <div style="font-size: 0.7rem; color: #666; margin-top: 5px;">(Tap for info)</div>
             </div>
 
-            <button id="complete-btn" onclick="completeSession()">I DID IT!</button>
+            <div class="task-card" onclick="openInfo('breathe')">
+                <div class="tag" style="color: var(--neon-yellow)">VIBE</div>
+                <div id="txt-breathe" style="font-size: 1.2rem; font-weight: bold; margin-top: 5px;"></div>
+                <div style="font-size: 0.7rem; color: #666; margin-top: 5px;">(Tap for info)</div>
+            </div>
+
+            <button id="complete-btn" onclick="finishSession()">COMPLETE!</button>
         </div>
     </div>
 
     <div id="lists-view" class="view">
-        <div style="background: white; padding: 10px; border: 2px solid black; margin-bottom: 20px;">
-            <p style="margin:0; font-size: 0.8rem;"><strong>TIP:</strong> Click a colored header below to add a custom move to that list.</p>
+        <div style="text-align:center; margin-bottom: 20px; color:white; font-size: 0.8rem;">
+            TAP A HEADER TO ADD A NEW MOVE
         </div>
-        <div id="lists-container" style="width: 100%; max-width: 400px;"></div>
+        <div id="lists-container"></div>
     </div>
 
-    <div id="modal-overlay" class="modal-overlay" onclick="closeModal(event)">
-        <div class="modal">
-            <h2 id="modal-title">TITLE</h2>
-            <p id="modal-desc" style="font-size: 1.1rem; line-height: 1.5;">Description goes here.</p>
-            <button class="close-modal" onclick="document.getElementById('modal-overlay').style.display='none'">RADICAL</button>
+    <div id="profile-view" class="view">
+        <div class="stat-box">
+            <div class="stat-big" id="profile-score">0</div>
+            <div class="stat-label">Total Points</div>
+        </div>
+
+        <div class="stat-box" style="background: var(--neon-pink); color: var(--white); border-color: var(--black);">
+            <div class="stat-big" id="profile-rank" style="font-size: 2rem;">NOVICE</div>
+            <div class="stat-label">Current Rank</div>
+        </div>
+
+        <div class="stat-box" style="background: var(--neon-cyan); color: var(--black);">
+            <div class="stat-big" id="profile-sessions">0</div>
+            <div class="stat-label">Breaks Taken</div>
+        </div>
+
+        <button onclick="resetData()" style="background: red; color: white; border: 4px solid black; padding: 10px; font-family: 'Space Mono'; margin-top: 20px;">RESET ALL DATA</button>
+    </div>
+
+    <div id="modal-overlay">
+        <div class="modal-box">
+            <h2 id="modal-title" class="modal-title">TITLE</h2>
+            <p id="modal-desc">Description</p>
+            
+            <input type="text" id="modal-input" placeholder="Type here..." autocomplete="off">
+            
+            <div class="modal-btns">
+                <button class="btn-modal" onclick="closeModal()">Close</button>
+                <button class="btn-modal btn-primary" id="modal-ok-btn" style="display:none;">OK</button>
+            </div>
         </div>
     </div>
 
     <script>
-        // --- DATA WITH EXPLAINERS ---
+        // --- DATA ---
         const defaultData = {
             workout: [
-                { t: "10 Jumping Jacks", d: "Stand upright with legs together, arms at sides. Jump up, spread feet wide, and bring hands over head. Jump back to start. Repeat!" },
-                { t: "10 Air Squats", d: "Keep feet shoulder width. Lower hips back and down like sitting in a chair. Keep chest up. Stand back up." },
-                { t: "5 Burpees", d: "Drop to a squat, kick feet back to plank, do a pushup (optional), jump feet back in, and jump up!" }
+                {t:"10 Jumping Jacks", d:"Jump up, spread legs, hands over head. Return. Repeat."},
+                {t:"10 Squats", d:"Feet shoulder width. Sit back like there's a chair. Stand up."},
+                {t:"Running in Place", d:"Lift knees high! Pump arms! Go for 30 seconds."}
             ],
             stretch: [
-                { t: "Touch Toes (30s)", d: "Stand straight. Hinge at hips. Reach for toes. Keep knees slightly bent if needed. Feel the hamstring stretch." },
-                { t: "Neck Rolls", d: "Gently roll your head in a circle. 5 times clockwise, 5 times counter-clockwise. Don't force it." },
-                { t: "Wrist Stretch", d: "Extend arm, palm facing out/up. Gently pull fingers back with other hand. Hold 15s per hand." }
+                {t:"Touch Toes", d:"Legs straight. Reach down. Hold for 30 seconds."},
+                {t:"Neck Rolls", d:"Roll head slowly in circles. Relax shoulders."},
+                {t:"Wrist Stretch", d:"Pull fingers back gently. Hold 15s per hand."}
             ],
             breathe: [
-                { t: "Box Breathing", d: "Inhale for 4 seconds. Hold for 4 seconds. Exhale for 4 seconds. Hold empty for 4 seconds." },
-                { t: "Chug Water", d: "Go to the kitchen. Fill a glass. Drink the whole thing. Hydrate or diedrate!" },
-                { t: "Eye Palming", d: "Rub hands together to create heat. Close eyes. Place warm palms over eyes. Relax for 60 seconds." }
+                {t:"Box Breathe", d:"In 4s, Hold 4s, Out 4s, Hold 4s."},
+                {t:"Water Break", d:"Drink a full glass of water right now."},
+                {t:"Eye Rest", d:"Close eyes. Cover with palms. Darkness for 60s."}
             ]
         };
 
-        // --- STATE ---
-        let data = JSON.parse(localStorage.getItem('bdybrk-data-v2')) || defaultData;
-        let userStats = JSON.parse(localStorage.getItem('bdybrk-stats')) || { score: 0, medal: "NOVICE" };
+        // Load State
+        let data = JSON.parse(localStorage.getItem('bdybrk-data-v3')) || defaultData;
+        let stats = JSON.parse(localStorage.getItem('bdybrk-stats')) || { score: 0, sessions: 0, rank: "NOVICE" };
         let currentSession = {};
+        
+        // Modal State
+        let activeModalCallback = null;
 
-        // --- INITIALIZATION ---
-        updateStatsDisplay();
+        // Init
+        updateUI();
         renderLists();
 
-        // --- CORE FUNCTIONS ---
-        function switchView(viewName) {
-            document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+        // --- NAVIGATION ---
+        function switchView(name) {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(name + '-view').classList.add('active');
             
-            document.getElementById(viewName + '-view').classList.add('active');
-            // Hacky toggle for button active state
-            if(viewName === 'home') document.querySelector('.nav-bar button:first-child').classList.add('active');
-            else document.querySelector('.nav-bar button:last-child').classList.add('active');
+            // Highlight nav button
+            const idx = name === 'home' ? 0 : (name === 'lists' ? 1 : 2);
+            document.querySelectorAll('.nav-btn')[idx].classList.add('active');
+            
+            if(name === 'profile') updateUI();
         }
 
-        // GENERATOR
+        // --- GAMEPLAY ---
         document.getElementById('go-btn').addEventListener('click', () => {
-            const getRand = (arr) => arr.length ? arr[Math.floor(Math.random() * arr.length)] : {t:"Rest", d:"Take a break."};
+            const getRand = (arr) => arr.length ? arr[Math.floor(Math.random() * arr.length)] : {t:"Rest", d:"Relax."};
             
             currentSession = {
                 workout: getRand(data.workout),
@@ -352,109 +408,144 @@
             document.getElementById('txt-stretch').innerText = currentSession.stretch.t;
             document.getElementById('txt-breathe').innerText = currentSession.breathe.t;
 
-            const card = document.getElementById('result-card');
-            card.style.display = 'block';
-            card.classList.remove('pop-in');
-            void card.offsetWidth; // trigger reflow
-            card.classList.add('pop-in');
-
+            document.getElementById('results-area').style.display = 'block';
             document.getElementById('complete-btn').style.display = 'block';
             document.getElementById('go-btn').innerText = "REROLL";
         });
 
-        // POPUPS
-        function showExplainer(type) {
-            if(!currentSession[type]) return;
-            document.getElementById('modal-title').innerText = currentSession[type].t;
-            document.getElementById('modal-desc').innerText = currentSession[type].d;
-            document.getElementById('modal-overlay').style.display = 'flex';
-        }
-
-        function closeModal(e) {
-            if(e.target.id === 'modal-overlay') e.target.style.display = 'none';
-        }
-
-        // GAMIFICATION
-        function completeSession() {
-            // Add points
-            userStats.score += 100;
+        function finishSession() {
+            stats.score += 100;
+            stats.sessions += 1;
+            updateRank();
+            saveStats();
+            updateUI();
             
-            // Calculate Medal
-            if(userStats.score >= 500) userStats.medal = "FRESH";
-            if(userStats.score >= 1000) userStats.medal = "RADICAL";
-            if(userStats.score >= 2500) userStats.medal = "BODACIOUS";
-            if(userStats.score >= 5000) userStats.medal = "LEGEND";
-
-            localStorage.setItem('bdybrk-stats', JSON.stringify(userStats));
-            updateStatsDisplay();
-
-            // Reward UI
-            document.getElementById('modal-title').innerText = "SESSION COMPLETE!";
-            document.getElementById('modal-desc').innerText = `You earned 100 points.\n\nCurrent Rank: ${userStats.medal}`;
-            document.getElementById('modal-overlay').style.display = 'flex';
-
-            // Reset Board
-            document.getElementById('result-card').style.display = 'none';
-            document.getElementById('go-btn').innerText = "NEXT ROUND";
+            showModal("info", "AWESOME!", `You earned 100 pts!\nCurrent Rank: ${stats.rank}`);
+            
+            document.getElementById('results-area').style.display = 'none';
+            document.getElementById('go-btn').innerText = "START";
         }
 
-        function updateStatsDisplay() {
-            document.getElementById('score-display').innerText = userStats.score;
-            document.getElementById('medal-display').innerText = userStats.medal;
+        function updateRank() {
+            if(stats.score >= 500) stats.rank = "FRESH";
+            if(stats.score >= 1500) stats.rank = "RADICAL";
+            if(stats.score >= 3000) stats.rank = "LEGEND";
         }
 
-        // LIST EDITOR
+        function updateUI() {
+            document.getElementById('header-score').innerText = stats.score;
+            document.getElementById('header-rank').innerText = stats.rank;
+            document.getElementById('profile-score').innerText = stats.score;
+            document.getElementById('profile-rank').innerText = stats.rank;
+            document.getElementById('profile-sessions').innerText = stats.sessions;
+        }
+
+        // --- CUSTOM MODAL SYSTEM ---
+        const modal = document.getElementById('modal-overlay');
+        const mTitle = document.getElementById('modal-title');
+        const mDesc = document.getElementById('modal-desc');
+        const mInput = document.getElementById('modal-input');
+        const mOkBtn = document.getElementById('modal-ok-btn');
+
+        function showModal(type, title, desc, callback) {
+            mTitle.innerText = title;
+            mDesc.innerText = desc || "";
+            mDesc.style.display = desc ? 'block' : 'none';
+            
+            if (type === 'input') {
+                mInput.style.display = 'block';
+                mInput.value = '';
+                mOkBtn.style.display = 'block';
+                activeModalCallback = callback;
+                mInput.focus();
+            } else {
+                mInput.style.display = 'none';
+                mOkBtn.style.display = 'none';
+                activeModalCallback = null;
+            }
+            
+            modal.style.display = 'flex';
+        }
+
+        function closeModal() {
+            modal.style.display = 'none';
+        }
+
+        mOkBtn.addEventListener('click', () => {
+            if (activeModalCallback && mInput.value.trim()) {
+                activeModalCallback(mInput.value.trim());
+                closeModal();
+            }
+        });
+
+        // --- INFO POPUPS ---
+        function openInfo(cat) {
+            if(!currentSession[cat]) return;
+            showModal("info", currentSession[cat].t, currentSession[cat].d);
+        }
+
+        // --- LIST EDITING ---
         function renderLists() {
             const container = document.getElementById('lists-container');
             container.innerHTML = '';
             
             ['workout', 'stretch', 'breathe'].forEach(cat => {
+                // Group Container
+                const group = document.createElement('div');
+                group.className = 'list-group';
+                
                 // Header
                 const header = document.createElement('div');
-                header.className = 'category-header';
-                let color = cat === 'workout' ? 'var(--hot-pink)' : (cat === 'stretch' ? 'var(--deep-purple)' : 'var(--electric-blue)');
+                header.className = 'list-header';
+                let color = cat === 'workout' ? 'var(--neon-cyan)' : (cat === 'stretch' ? 'var(--neon-pink)' : 'var(--neon-yellow)');
                 header.style.borderLeft = `10px solid ${color}`;
                 header.innerHTML = `<span>${cat.toUpperCase()}</span> <span>+ ADD</span>`;
-                header.onclick = () => addCustomItem(cat);
-                container.appendChild(header);
+                header.onclick = () => {
+                    showModal("input", `ADD TO ${cat.toUpperCase()}`, "", (val) => {
+                        data[cat].push({t: val, d: "You added this custom move!"});
+                        saveData();
+                    });
+                };
+                
+                group.appendChild(header);
 
                 // Items
                 data[cat].forEach((item, idx) => {
                     const row = document.createElement('div');
                     row.className = 'list-item';
-                    row.innerHTML = `
-                        <span>${item.t}</span>
-                        <button class="del-btn" onclick="deleteItem('${cat}', ${idx})">×</button>
-                    `;
-                    container.appendChild(row);
+                    row.innerHTML = `<span>${item.t}</span>`;
+                    
+                    const del = document.createElement('button');
+                    del.className = 'del-btn';
+                    del.innerText = '×';
+                    del.onclick = () => {
+                        data[cat].splice(idx, 1);
+                        saveData();
+                    };
+                    
+                    row.appendChild(del);
+                    group.appendChild(row);
                 });
+                
+                container.appendChild(group);
             });
         }
 
-        function addCustomItem(cat) {
-            const title = prompt(`Enter name for new ${cat} move:`);
-            if(!title) return;
-            
-            // We use a default description for custom items to keep input simple
-            const newItem = {
-                t: title,
-                d: "You added this custom move! You know what to do."
-            };
-
-            data[cat].push(newItem);
-            saveData();
-        }
-
-        function deleteItem(cat, idx) {
-            if(confirm('Delete this move?')) {
-                data[cat].splice(idx, 1);
-                saveData();
-            }
-        }
-
         function saveData() {
-            localStorage.setItem('bdybrk-data-v2', JSON.stringify(data));
+            localStorage.setItem('bdybrk-data-v3', JSON.stringify(data));
             renderLists();
+        }
+
+        function saveStats() {
+            localStorage.setItem('bdybrk-stats', JSON.stringify(stats));
+        }
+
+        function resetData() {
+            if(confirm("Reset all scores and lists?")) {
+                localStorage.removeItem('bdybrk-data-v3');
+                localStorage.removeItem('bdybrk-stats');
+                location.reload();
+            }
         }
 
         // Service Worker
