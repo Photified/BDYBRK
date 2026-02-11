@@ -5,287 +5,459 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>BDYBRK</title>
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#000000">
+    <meta name="theme-color" content="#9b00e8">
     <link rel="apple-touch-icon" href="icon-192.png">
     
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Roboto+Mono:wght@500&display=swap" rel="stylesheet">
+
     <style>
         :root {
-            --bg: #000000;
-            --card: #111111;
-            --text: #ffffff;
-            --accent: #333333;
-            --highlight: #ffffff;
-            --danger: #ff4444;
+            --hot-pink: #ff0099;
+            --electric-blue: #00ffff;
+            --neon-yellow: #ffff00;
+            --deep-purple: #6a00ff;
+            --black: #000000;
+            --white: #ffffff;
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        
+
         body {
             margin: 0;
-            background: var(--bg);
-            color: var(--text);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--deep-purple);
+            /* 90s Pattern Generation */
+            background-image: 
+                radial-gradient(circle at 100% 100%, rgba(255, 0, 153, 0.8) 10%, transparent 11%),
+                radial-gradient(circle at 0% 0%, rgba(0, 255, 255, 0.8) 10%, transparent 11%),
+                linear-gradient(135deg, #6a00ff 25%, #5800d4 25%, #5800d4 50%, #6a00ff 50%, #6a00ff 75%, #5800d4 75%, #5800d4 100%);
+            background-size: 40px 40px;
+            color: var(--black);
+            font-family: 'Roboto Mono', monospace;
             display: flex;
             flex-direction: column;
             height: 100vh;
             overflow: hidden;
         }
 
-        /* HEADER */
+        /* --- HEADER & SCOREBOARD --- */
         header {
-            padding: 20px;
+            background: var(--black);
+            color: var(--neon-yellow);
+            padding: 15px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid #222;
-        }
-        h1 { margin: 0; letter-spacing: 4px; font-size: 1.2rem; font-weight: 900; }
-        
-        button.icon-btn {
-            background: none;
-            border: none;
-            color: #666;
-            cursor: pointer;
-            padding: 10px;
-            font-size: 1.2rem;
+            border-bottom: 4px solid var(--electric-blue);
+            box-shadow: 0 4px 0 rgba(0,0,0,0.5);
+            z-index: 10;
         }
 
-        /* VIEWS */
+        h1 {
+            font-family: 'Archivo Black', sans-serif;
+            font-size: 1.8rem;
+            margin: 0;
+            text-transform: uppercase;
+            text-shadow: 3px 3px 0px var(--hot-pink);
+            letter-spacing: -1px;
+            transform: skew(-5deg);
+        }
+
+        .score-badge {
+            background: var(--white);
+            padding: 5px 10px;
+            font-weight: bold;
+            border: 2px solid var(--hot-pink);
+            box-shadow: 3px 3px 0 var(--black);
+            font-size: 0.8rem;
+        }
+
+        /* --- NAVIGATION --- */
+        .nav-bar {
+            background: var(--white);
+            display: flex;
+            border-bottom: 4px solid var(--black);
+        }
+        .nav-btn {
+            flex: 1;
+            padding: 15px;
+            background: none;
+            border: none;
+            border-right: 2px solid var(--black);
+            font-family: 'Archivo Black', sans-serif;
+            text-transform: uppercase;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        .nav-btn:last-child { border-right: none; }
+        .nav-btn.active {
+            background: var(--neon-yellow);
+            box-shadow: inset 0 -4px 0 var(--hot-pink);
+        }
+
+        /* --- MAIN VIEW AREA --- */
         .view {
             flex: 1;
-            display: none; /* Hidden by default */
+            display: none;
             flex-direction: column;
             padding: 20px;
             overflow-y: auto;
+            align-items: center;
         }
         .view.active { display: flex; }
 
-        /* HOME VIEW */
-        #home-view {
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-        }
-
+        /* --- HOME (PLAY) VIEW --- */
         #go-btn {
-            width: 180px;
-            height: 180px;
-            border-radius: 50%;
-            background: var(--card);
-            border: 2px solid #333;
-            color: white;
-            font-size: 2rem;
-            font-weight: bold;
-            letter-spacing: 2px;
+            width: 200px;
+            height: 200px;
+            background: var(--neon-yellow);
+            border: 6px solid var(--black);
+            color: var(--black);
+            font-family: 'Archivo Black', sans-serif;
+            font-size: 2.5rem;
             cursor: pointer;
-            transition: transform 0.1s, background 0.2s;
-            margin-bottom: 40px;
+            margin: 30px 0;
+            box-shadow: 10px 10px 0 var(--hot-pink);
+            transform: rotate(-3deg);
+            transition: transform 0.2s, box-shadow 0.2s;
+            clip-path: polygon(10% 0, 100% 0, 100% 90%, 90% 100%, 0 100%, 0 10%); /* Retro Shape */
         }
-        #go-btn:active { transform: scale(0.95); background: #222; }
+        #go-btn:active {
+            transform: rotate(-3deg) translate(4px, 4px);
+            box-shadow: 2px 2px 0 var(--hot-pink);
+        }
 
-        .result-card {
+        .card {
             width: 100%;
             max-width: 400px;
-            background: var(--card);
-            border-radius: 12px;
+            background: var(--white);
+            border: 4px solid var(--black);
+            box-shadow: 8px 8px 0 var(--electric-blue);
             padding: 20px;
-            text-align: left;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 0.3s, transform 0.3s;
+            margin-bottom: 20px;
+            position: relative;
         }
-        .result-card.show { opacity: 1; transform: translateY(0); }
 
-        .result-item { margin-bottom: 15px; border-bottom: 1px solid #222; padding-bottom: 15px; }
-        .result-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
-        .label { font-size: 0.7rem; color: #666; letter-spacing: 2px; text-transform: uppercase; display: block; margin-bottom: 5px; }
-        .value { font-size: 1.2rem; font-weight: 500; }
-
-        /* SETTINGS VIEW */
-        .tabs { display: flex; gap: 10px; margin-bottom: 20px; }
-        .tab {
-            flex: 1;
-            background: var(--card);
-            border: 1px solid #222;
-            color: #666;
+        .task-row {
+            margin-bottom: 15px;
             padding: 10px;
-            border-radius: 8px;
-            font-size: 0.8rem;
-            font-weight: bold;
+            background: #f0f0f0;
+            border: 2px solid var(--black);
             cursor: pointer;
-            text-align: center;
-            text-transform: uppercase;
+            transition: transform 0.1s;
         }
-        .tab.active { background: #fff; color: #000; border-color: #fff; }
-
-        .input-group { display: flex; gap: 10px; margin-bottom: 20px; }
-        input {
-            flex: 1;
-            background: var(--card);
-            border: 1px solid #333;
-            color: white;
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 1rem;
-        }
-        input:focus { outline: none; border-color: #666; }
+        .task-row:active { transform: scale(0.98); background: var(--electric-blue); }
         
-        .add-btn {
-            background: #333;
-            color: white;
-            border: none;
-            padding: 0 20px;
-            border-radius: 8px;
+        .label {
+            display: inline-block;
+            background: var(--black);
+            color: var(--white);
+            padding: 2px 6px;
+            font-size: 0.7rem;
             font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+            transform: skew(-10deg);
+        }
+        .task-text { font-size: 1.1rem; font-weight: bold; display: block; }
+        .help-hint { font-size: 0.7rem; color: #666; margin-top: 4px; }
+
+        #complete-btn {
+            display: none; /* Hidden until tasks generated */
+            width: 100%;
+            padding: 15px;
+            background: var(--hot-pink);
+            color: white;
+            font-family: 'Archivo Black';
+            font-size: 1.2rem;
+            border: 4px solid var(--black);
+            box-shadow: 6px 6px 0 var(--black);
+            text-transform: uppercase;
             cursor: pointer;
         }
 
-        ul { list-style: none; padding: 0; margin: 0; }
-        li {
+        /* --- EDITOR VIEW --- */
+        .category-header {
+            width: 100%;
+            background: var(--black);
+            color: var(--white);
+            padding: 10px;
+            margin-top: 20px;
+            font-family: 'Archivo Black';
+            text-transform: uppercase;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px;
-            background: var(--card);
-            margin-bottom: 8px;
-            border-radius: 8px;
-            animation: fadeIn 0.2s ease;
+            border: 2px solid var(--white);
+            cursor: pointer;
         }
-        .delete-btn { color: #444; background: none; border: none; font-size: 1.2rem; cursor: pointer; }
-        .delete-btn:hover { color: var(--danger); }
+        .category-header:hover { background: var(--electric-blue); color: var(--black); }
+        
+        .list-item {
+            background: var(--white);
+            border: 2px solid var(--black);
+            border-top: none;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .del-btn { color: red; font-weight: bold; border: none; background: none; font-size: 1.2rem; }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        /* --- POPUP MODAL --- */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.8);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .modal {
+            background: var(--neon-yellow);
+            border: 5px solid var(--black);
+            box-shadow: 15px 15px 0 var(--hot-pink);
+            padding: 25px;
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+        }
+        .modal h2 { font-family: 'Archivo Black'; margin-top: 0; text-transform: uppercase; }
+        .close-modal {
+            background: var(--black);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-weight: bold;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+
+        /* --- CONFETTI ANIMATION --- */
+        @keyframes pop { 0% { transform: scale(0); } 80% { transform: scale(1.1); } 100% { transform: scale(1); } }
+        .pop-in { animation: pop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+
     </style>
 </head>
 <body>
 
     <header>
         <h1>BDYBRK</h1>
-        <button id="nav-btn" class="icon-btn">☰</button>
+        <div class="score-badge">
+            SCORE: <span id="score-display">0</span> | <span id="medal-display">NOVICE</span>
+        </div>
     </header>
 
+    <div class="nav-bar">
+        <button class="nav-btn active" onclick="switchView('home')">The Zone</button>
+        <button class="nav-btn" onclick="switchView('lists')">Edit Moves</button>
+    </div>
+
     <div id="home-view" class="view active">
-        <button id="go-btn">START</button>
-        
-        <div id="result-container" class="result-card">
-            <div class="result-item">
-                <span class="label">Move</span>
-                <span class="value" id="res-workout"></span>
+        <button id="go-btn">HIT IT!</button>
+
+        <div id="result-card" class="card" style="display: none;">
+            <div class="task-row" onclick="showExplainer('workout')">
+                <span class="label" style="background: var(--hot-pink)">Move</span>
+                <span class="task-text" id="txt-workout">...</span>
+                <div class="help-hint">(Click for instructions)</div>
             </div>
-            <div class="result-item">
-                <span class="label">Stretch</span>
-                <span class="value" id="res-stretch"></span>
+            
+            <div class="task-row" onclick="showExplainer('stretch')">
+                <span class="label" style="background: var(--deep-purple)">Stretch</span>
+                <span class="task-text" id="txt-stretch">...</span>
+                <div class="help-hint">(Click for instructions)</div>
             </div>
-            <div class="result-item">
-                <span class="label">Breathe</span>
-                <span class="value" id="res-breathe"></span>
+
+            <div class="task-row" onclick="showExplainer('breathe')">
+                <span class="label" style="background: var(--electric-blue); color:black">Vibe</span>
+                <span class="task-text" id="txt-breathe">...</span>
+                <div class="help-hint">(Click for instructions)</div>
             </div>
+
+            <button id="complete-btn" onclick="completeSession()">I DID IT!</button>
         </div>
     </div>
 
-    <div id="settings-view" class="view">
-        <div class="tabs">
-            <div class="tab active" data-cat="workout">Move</div>
-            <div class="tab" data-cat="stretch">Stretch</div>
-            <div class="tab" data-cat="breathe">Breathe</div>
+    <div id="lists-view" class="view">
+        <div style="background: white; padding: 10px; border: 2px solid black; margin-bottom: 20px;">
+            <p style="margin:0; font-size: 0.8rem;"><strong>TIP:</strong> Click a colored header below to add a custom move to that list.</p>
         </div>
+        <div id="lists-container" style="width: 100%; max-width: 400px;"></div>
+    </div>
 
-        <div class="input-group">
-            <input type="text" id="new-item" placeholder="Add item...">
-            <button class="add-btn" id="add-btn">+</button>
+    <div id="modal-overlay" class="modal-overlay" onclick="closeModal(event)">
+        <div class="modal">
+            <h2 id="modal-title">TITLE</h2>
+            <p id="modal-desc" style="font-size: 1.1rem; line-height: 1.5;">Description goes here.</p>
+            <button class="close-modal" onclick="document.getElementById('modal-overlay').style.display='none'">RADICAL</button>
         </div>
-
-        <ul id="list-container"></ul>
     </div>
 
     <script>
-        // --- DATA ---
+        // --- DATA WITH EXPLAINERS ---
         const defaultData = {
-            workout: ["10 Jumping Jacks", "10 Squats", "5 Burpees", "20 High Knees"],
-            stretch: ["Touch Toes (30s)", "Neck Rolls", "Shoulder Shrugs", "Wrist Stretch"],
-            breathe: ["Box Breathing", "Drink 1 cup water", "Close eyes (1 min)", "4-7-8 Breathing"]
+            workout: [
+                { t: "10 Jumping Jacks", d: "Stand upright with legs together, arms at sides. Jump up, spread feet wide, and bring hands over head. Jump back to start. Repeat!" },
+                { t: "10 Air Squats", d: "Keep feet shoulder width. Lower hips back and down like sitting in a chair. Keep chest up. Stand back up." },
+                { t: "5 Burpees", d: "Drop to a squat, kick feet back to plank, do a pushup (optional), jump feet back in, and jump up!" }
+            ],
+            stretch: [
+                { t: "Touch Toes (30s)", d: "Stand straight. Hinge at hips. Reach for toes. Keep knees slightly bent if needed. Feel the hamstring stretch." },
+                { t: "Neck Rolls", d: "Gently roll your head in a circle. 5 times clockwise, 5 times counter-clockwise. Don't force it." },
+                { t: "Wrist Stretch", d: "Extend arm, palm facing out/up. Gently pull fingers back with other hand. Hold 15s per hand." }
+            ],
+            breathe: [
+                { t: "Box Breathing", d: "Inhale for 4 seconds. Hold for 4 seconds. Exhale for 4 seconds. Hold empty for 4 seconds." },
+                { t: "Chug Water", d: "Go to the kitchen. Fill a glass. Drink the whole thing. Hydrate or diedrate!" },
+                { t: "Eye Palming", d: "Rub hands together to create heat. Close eyes. Place warm palms over eyes. Relax for 60 seconds." }
+            ]
         };
 
-        let data = JSON.parse(localStorage.getItem('bdybrk-data')) || defaultData;
-        let activeCategory = 'workout';
+        // --- STATE ---
+        let data = JSON.parse(localStorage.getItem('bdybrk-data-v2')) || defaultData;
+        let userStats = JSON.parse(localStorage.getItem('bdybrk-stats')) || { score: 0, medal: "NOVICE" };
+        let currentSession = {};
 
-        // --- ELEMENTS ---
-        const views = { home: document.getElementById('home-view'), settings: document.getElementById('settings-view') };
-        const navBtn = document.getElementById('nav-btn');
-        const goBtn = document.getElementById('go-btn');
-        const resultCard = document.getElementById('result-container');
-        const tabs = document.querySelectorAll('.tab');
-        const listContainer = document.getElementById('list-container');
-        const input = document.getElementById('new-item');
-        const addBtn = document.getElementById('add-btn');
+        // --- INITIALIZATION ---
+        updateStatsDisplay();
+        renderLists();
 
-        // --- NAVIGATION ---
-        navBtn.addEventListener('click', () => {
-            const isHome = views.home.classList.contains('active');
-            views.home.classList.toggle('active');
-            views.settings.classList.toggle('active');
-            navBtn.textContent = isHome ? '✕' : '☰';
-            if (!isHome) renderList(); // Refresh list when entering settings
-        });
-
-        // --- LOGIC: RANDOMIZER ---
-        goBtn.addEventListener('click', () => {
-            const getRandom = (arr) => arr.length ? arr[Math.floor(Math.random() * arr.length)] : "Rest";
+        // --- CORE FUNCTIONS ---
+        function switchView(viewName) {
+            document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
             
-            document.getElementById('res-workout').textContent = getRandom(data.workout);
-            document.getElementById('res-stretch').textContent = getRandom(data.stretch);
-            document.getElementById('res-breathe').textContent = getRandom(data.breathe);
+            document.getElementById(viewName + '-view').classList.add('active');
+            // Hacky toggle for button active state
+            if(viewName === 'home') document.querySelector('.nav-bar button:first-child').classList.add('active');
+            else document.querySelector('.nav-bar button:last-child').classList.add('active');
+        }
+
+        // GENERATOR
+        document.getElementById('go-btn').addEventListener('click', () => {
+            const getRand = (arr) => arr.length ? arr[Math.floor(Math.random() * arr.length)] : {t:"Rest", d:"Take a break."};
             
-            resultCard.classList.remove('show');
-            void resultCard.offsetWidth; // Trigger reflow to restart animation
-            resultCard.classList.add('show');
+            currentSession = {
+                workout: getRand(data.workout),
+                stretch: getRand(data.stretch),
+                breathe: getRand(data.breathe)
+            };
+
+            document.getElementById('txt-workout').innerText = currentSession.workout.t;
+            document.getElementById('txt-stretch').innerText = currentSession.stretch.t;
+            document.getElementById('txt-breathe').innerText = currentSession.breathe.t;
+
+            const card = document.getElementById('result-card');
+            card.style.display = 'block';
+            card.classList.remove('pop-in');
+            void card.offsetWidth; // trigger reflow
+            card.classList.add('pop-in');
+
+            document.getElementById('complete-btn').style.display = 'block';
+            document.getElementById('go-btn').innerText = "REROLL";
         });
 
-        // --- LOGIC: LIST MANAGEMENT ---
-        tabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                document.querySelector('.tab.active').classList.remove('active');
-                tab.classList.add('active');
-                activeCategory = tab.dataset.cat;
-                renderList();
-            });
-        });
+        // POPUPS
+        function showExplainer(type) {
+            if(!currentSession[type]) return;
+            document.getElementById('modal-title').innerText = currentSession[type].t;
+            document.getElementById('modal-desc').innerText = currentSession[type].d;
+            document.getElementById('modal-overlay').style.display = 'flex';
+        }
 
-        function renderList() {
-            listContainer.innerHTML = '';
-            data[activeCategory].forEach((item, index) => {
-                const li = document.createElement('li');
-                li.innerHTML = `
-                    <span>${item}</span>
-                    <button class="delete-btn" onclick="removeItem(${index})">×</button>
-                `;
-                listContainer.appendChild(li);
+        function closeModal(e) {
+            if(e.target.id === 'modal-overlay') e.target.style.display = 'none';
+        }
+
+        // GAMIFICATION
+        function completeSession() {
+            // Add points
+            userStats.score += 100;
+            
+            // Calculate Medal
+            if(userStats.score >= 500) userStats.medal = "FRESH";
+            if(userStats.score >= 1000) userStats.medal = "RADICAL";
+            if(userStats.score >= 2500) userStats.medal = "BODACIOUS";
+            if(userStats.score >= 5000) userStats.medal = "LEGEND";
+
+            localStorage.setItem('bdybrk-stats', JSON.stringify(userStats));
+            updateStatsDisplay();
+
+            // Reward UI
+            document.getElementById('modal-title').innerText = "SESSION COMPLETE!";
+            document.getElementById('modal-desc').innerText = `You earned 100 points.\n\nCurrent Rank: ${userStats.medal}`;
+            document.getElementById('modal-overlay').style.display = 'flex';
+
+            // Reset Board
+            document.getElementById('result-card').style.display = 'none';
+            document.getElementById('go-btn').innerText = "NEXT ROUND";
+        }
+
+        function updateStatsDisplay() {
+            document.getElementById('score-display').innerText = userStats.score;
+            document.getElementById('medal-display').innerText = userStats.medal;
+        }
+
+        // LIST EDITOR
+        function renderLists() {
+            const container = document.getElementById('lists-container');
+            container.innerHTML = '';
+            
+            ['workout', 'stretch', 'breathe'].forEach(cat => {
+                // Header
+                const header = document.createElement('div');
+                header.className = 'category-header';
+                let color = cat === 'workout' ? 'var(--hot-pink)' : (cat === 'stretch' ? 'var(--deep-purple)' : 'var(--electric-blue)');
+                header.style.borderLeft = `10px solid ${color}`;
+                header.innerHTML = `<span>${cat.toUpperCase()}</span> <span>+ ADD</span>`;
+                header.onclick = () => addCustomItem(cat);
+                container.appendChild(header);
+
+                // Items
+                data[cat].forEach((item, idx) => {
+                    const row = document.createElement('div');
+                    row.className = 'list-item';
+                    row.innerHTML = `
+                        <span>${item.t}</span>
+                        <button class="del-btn" onclick="deleteItem('${cat}', ${idx})">×</button>
+                    `;
+                    container.appendChild(row);
+                });
             });
+        }
+
+        function addCustomItem(cat) {
+            const title = prompt(`Enter name for new ${cat} move:`);
+            if(!title) return;
+            
+            // We use a default description for custom items to keep input simple
+            const newItem = {
+                t: title,
+                d: "You added this custom move! You know what to do."
+            };
+
+            data[cat].push(newItem);
+            saveData();
+        }
+
+        function deleteItem(cat, idx) {
+            if(confirm('Delete this move?')) {
+                data[cat].splice(idx, 1);
+                saveData();
+            }
         }
 
         function saveData() {
-            localStorage.setItem('bdybrk-data', JSON.stringify(data));
-            renderList();
+            localStorage.setItem('bdybrk-data-v2', JSON.stringify(data));
+            renderLists();
         }
 
-        window.removeItem = (index) => {
-            data[activeCategory].splice(index, 1);
-            saveData();
-        };
-
-        const addItem = () => {
-            const val = input.value.trim();
-            if (val) {
-                data[activeCategory].push(val);
-                input.value = '';
-                saveData();
-            }
-        };
-
-        addBtn.addEventListener('click', addItem);
-        input.addEventListener('keypress', (e) => { if(e.key === 'Enter') addItem(); });
-
-        // Service Worker Registration
+        // Service Worker
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('sw.js');
         }
